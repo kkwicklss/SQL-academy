@@ -508,3 +508,16 @@ ___
 SELECT ROUND(price, -1) AS rounded_price
 FROM Rooms;
 ~~~~
+___
+~~~~sql
+SELECT  CAST("2022-06-16 16:37:23" AS DATETIME) AS datetime_1,
+        CAST("2014/02/22 16*37*22" AS DATETIME) AS datetime_2,
+        CAST("20220616163723" AS DATETIME) AS datetime_3,
+        CAST("2021-02-12" AS DATE) AS date_1,
+        CAST("160:23:13" AS TIME) AS time_1,
+        CAST("89" AS YEAR) AS year
+
+SELECT STR_TO_DATE('November 13, 1998', '%M %d, %Y') AS date;
+
+SELECT CURDATE(), CURTIME(), NOW();
+~~~~
