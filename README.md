@@ -235,3 +235,38 @@ WHERE (
 		WHERE id = 11
 	);
 ~~~~
+___
+С помощью коррелированного подзапроса выведите имена всех членов семьи (member_name) и цену их самого дорогого купленного товара.
+Для вывода цены самого дорогого купленного товара используйте псевдоним good_price. Если такого товара нет, выведите NULL.
+~~~~sql
+SELECT member_name,
+	(
+		SELECT MAX(unit_price)
+		FROM Payments
+		WHERE Payments.family_member = FamilyMembers.member_id
+	) AS good_price
+FROM FamilyMembers;
+~~~~
+___
+~~~~sql
+-- Пример использования конструкции WITH
+WITH Aeroflot_trips AS
+    (SELECT TRIP.* FROM Company
+        INNER JOIN Trip ON Trip.company = Company.id WHERE name = "Aeroflot")
+
+SELECT plane, COUNT(plane) AS amount FROM Aeroflot_trips GROUP BY plane;
+~~~~
+~~~~sql
+WITH название_cte [(столбец_1 [, столбец_2 ] …)] AS (подзапрос)
+    [, название_cte [(столбец_1 [, столбец_2 ] …)] AS (подзапрос)] …
+~~~~
+~~~~sql
+WITH Aeroflot_trips AS
+    (SELECT TRIP.* FROM Company
+        INNER JOIN Trip ON Trip.company = Company.id WHERE name = "Aeroflot"),
+    Don_avia_trips AS
+    (SELECT TRIP.* FROM Company
+        INNER JOIN Trip ON Trip.company = Company.id WHERE name = "Don_avia")
+
+SELECT * FROM Don_avia_trips UNION SELECT * FROM  Aeroflot_trips;
+~~~~
