@@ -176,3 +176,43 @@ WHERE price = (
 		FROM Rooms
 	);
 ~~~~
+Если подзапрос возвращает более одной строки, его нельзя просто использовать с операторами сравнения, как это можно было делать со скалярными подзапросами.
+Однако c подзапросами, возвращающими несколько строк и один столбец, можно использовать 3 дополнительных оператора. -> ALL, IN, ANY
+Необходимо найти имена всех владельцев жилья, которые сами при этом никогда не снимали жилье. Чтобы получить данный список, мы можем действовать следующим образом:
+Получить список имён всех владельцев жилья
+~~~~sql
+SELECT DISTINCT name FROM Users INNER JOIN Rooms
+ON Users.id = Rooms.owner_id
+~~~~
+Получить список идентификаторов всех пользователей, снимавших жилье
+~~~~sql
+SELECT DISTINCT user_id FROM Reservations
+~~~~
+Отфильтровать первый список всех владельцев по условию, что идентификатор владельца жилья не равен ни одному из идентификаторов пользователей, когда-либо снимавших жилье
+~~~~sql
+SELECT DISTINCT name FROM Users INNER JOIN Rooms
+    ON Users.id = Rooms.owner_id
+    WHERE Users.id <> ALL (
+        SELECT DISTINCT user_id FROM Reservations
+    )
+~~~~
+~~~~sql
+SELECT * FROM Users WHERE id IN (
+    SELECT DISTINCT owner_id FROM Rooms WHERE price >= 150
+)
+~~~~
+~~~~sql
+SELECT * FROM Users WHERE id = ANY (
+    SELECT DISTINCT owner_id FROM Rooms WHERE price >= 150
+)
+~~~~
+___
+Выведите названия товаров из таблицы Goods (поле good_name), которые ещё ни разу не покупались ни одним из членов семьи (таблица Payments).
+~~~~sql
+SELECT good_name
+FROM Goods
+WHERE Goods.good_id NOT IN (
+		SELECT good
+		FROM Payments
+	);
+~~~~
