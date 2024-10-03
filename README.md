@@ -374,3 +374,99 @@ SELECT first_name,
 FROM Teacher;
 ~~~~
 ___
+Для добавления новых записей в таблицу предназначен оператор INSERT.
+~~~~sql
+INSERT INTO имя_таблицы [(поле_таблицы, ...)]
+VALUES (значение_поля_таблицы, ...)
+| SELECT поле_таблицы, ... FROM имя_таблицы ...
+~~~~
+___
+Добавьте новый товар в таблицу Goods с именем «Table» и типом «equipment».
+В качестве первичного ключа (good_id) укажите количество записей в таблице + 1.
+~~~~sql
+INSERT INTO Goods
+SELECT COUNT(*) + 1,
+	'Table',
+	(
+		SELECT good_type_id
+		FROM GoodTypes
+		WHERE good_type_name = 'equipment'
+	)
+FROM Goods;
+~~~~
+___
+Для редактирования существующих записей в таблицах существует SQL оператор UPDATE.
+~~~~sql
+UPDATE имя_таблицы
+SET поле_таблицы1 = значение_поля_таблицы1,
+    поле_таблицыN = значение_поля_таблицыN
+[WHERE условие_выборки]
+~~~~
+> Будьте внимательны, когда обновляете данные. Если вы пропустите оператор WHERE, то будут обновлены все записи в таблице.
+В запросах на обновление данных можно менять значения, опираясь на предыдущее значение.
+~~~~sql
+UPDATE Payments
+SET unit_price = unit_price * 2;
+~~~~
+___
+Измените имя у "Wednesday Addams" на новое "Tuesday Addams".
+~~~~sql
+UPDATE FamilyMembers
+SET member_name = "Tuesday Addams"
+WHERE member_name = "Wednesday Addams";
+~~~~
+___
+Обновите стоимость всех комнат в таблице (Rooms), добавив к текущей 10 единиц
+~~~~sql
+UPDATE Rooms
+SET price = price + 10;
+~~~~
+___
+Время от времени возникает задача удаления записей из таблицы. Для этого в SQL предусмотрены операторы DELETE и TRUNCATE, из которых наиболее универсальным и безопасным является первый вариант.
+~~~~sql
+DELETE FROM имя_таблицы
+[WHERE условие_отбора_записей];
+~~~~
+Если условие отбора записей WHERE отсутствует, то будут удалены все записи указанной таблицы.
+Эту же операцию (удаления всех записей) можно сделать также с помощью оператора TRUNCATE. Он выполнит удаление таблицы и пересоздаст её заново - этот вариант работает гораздо быстрее, чем удаление всех записей одна за другой (как в случае с DELETE) особенно для больших таблиц.
+~~~~sql
+TRUNCATE TABLE имя_таблицы;
+~~~~
+Если в DELETE запросе используется JOIN, то необходимо указать из каких(ой) именно таблиц(ы) требуется удалять записи.
+~~~~sql
+DELETE имя_таблицы_1 [, имя_таблицы_2] FROM
+имя_таблицы_1 JOIN имя_таблицы_2
+ON имя_таблицы_1.поле = имя_таблицы_2.поле
+[WHERE условие_отбора_записей];
+DELETE Reservations FROM
+Reservations JOIN Rooms ON
+Reservations.room_id = Rooms.id
+WHERE Rooms.has_kitchen = false;
+~~~~
+Если бы, помимо удаления бронирования, нам нужно было также удалить и жилье, то запрос приобрёл бы следующий вид:
+~~~~sql
+DELETE Reservations, Rooms FROM
+Reservations JOIN Rooms ON
+Reservations.room_id = Rooms.id
+WHERE Rooms.has_kitchen = false;
+~~~~
+___
+Удалите все записи из таблицы Payments, используя оператор DELETE.
+~~~~sql
+DELETE FROM Payments;
+~~~~
+___
+Удалить запись из таблицы Goods, у которой поле good_name равно "milk"
+~~~~sql
+DELETE FROM Goods
+WHERE good_name = 'milk';
+~~~~
+___
+Измените запрос так, чтобы удалить товары (Goods), имеющие тип деликатесов (delicacies).
+~~~~sql
+DELETE Goods
+FROM Goods
+	JOIN GoodTypes ON Goods.type = GoodTypes.good_type_id
+WHERE GoodTypes.good_type_name = "delicacies";
+~~~~
+___
