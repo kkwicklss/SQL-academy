@@ -1,5 +1,5 @@
 # SQL-academy
-Решенные задачи с сайта sql-academy
+Мои решенные задачи с сайта sql-academy, а также некоторые выжимки из учебного материала
 ___ 
 Выведите имена first_name и фамилии last_name студентов из таблицы Student, у кого отсутствует отчество middle_name
 ~~~~sql
@@ -151,7 +151,7 @@ ___
 ___
 ![alt text](https://github.com/kkwicklss/SQL-academy/blob/main/IMG_7561.jpeg)
 ___
-![alt text](https://github.com/kkwicklss/SQL-academy/blob/main/img.png)
+![alt text](https://github.com/kkwicklss/SQL-academy/blob/main/img.png)  
 Выведите имя first_name и фамилию last_name каждого учителя из таблицы Teacher, а также количество занятий, в которых он был назначен преподавателем. Если преподаватель не был назначен ни на одно занятие, то выведите 0.
 Для вывода количества занятий используйте псевдоним amount_classes.
 ~~~~sql
@@ -163,3 +163,16 @@ FROM Teacher
 GROUP BY Teacher.id;
 ~~~~
 ___
+> Подзапрос — это запрос, использующийся в другом SQL запросе. Подзапрос всегда заключён в круглые скобки и обычно выполняется перед основным запросом.
+Скалярный подзапрос - подзапрос, возвращающий одну строку и один столбец
+___
+Выведите всю информацию о пользователе из таблицы Users, кто является владельцем самого дорогого жилья (таблица Rooms).
+~~~~sql
+SELECT Users.*
+FROM Users
+	LEFT JOIN Rooms ON Users.id = Rooms.owner_id
+WHERE price = (
+		SELECT MAX(price)
+		FROM Rooms
+	);
+~~~~
