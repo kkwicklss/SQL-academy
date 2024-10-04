@@ -683,3 +683,42 @@ OVER (
 RANGE, в отличие от ROWS, определяет границы окна на основе значений столбцов, упорядоченных в соответствии с ORDER BY в оконной функции.
 Динамичность границ:
 Границы, определённые с помощью RANGE, могут варьироваться в зависимости от данных, что делает окно гибким, но потенциально менее предсказуемым.
+![alt text](https://sql-academy.org/_next/image?url=%2Fstatic%2FguidePage%2Ftypes-of-windows-functions%2Fcategories_of_windows_functions.png&w=3840&q=50)
+~~~~sql
+SELECT id,
+	home_type,
+	price,
+	SUM(price) OVER(PARTITION BY home_type) AS 'Sum',
+	COUNT(price) OVER(PARTITION BY home_type) AS 'Count',
+	AVG(price) OVER(PARTITION BY home_type) AS 'Avg',
+	MAX(price) OVER(PARTITION BY home_type) AS 'Max',
+	MIN(price) OVER(PARTITION BY home_type) AS 'Min'
+FROM Rooms;
+~~~~
+Ранжирующие оконные функции — это функции, которые ранжируют значение для каждой строки в окне.
+~~~~sql
+SELECT id,
+	home_type,
+	price,
+	ROW_NUMBER() OVER(PARTITION BY home_type ORDER BY price) AS 'row_number',
+	RANK() OVER(PARTITION BY home_type ORDER BY price) AS 'rank',
+	DENSE_RANK() OVER(PARTITION BY home_type ORDER BY price) AS 'dense_rank'
+FROM Rooms;
+~~~~
+Оконные функции смещения — это функции, которые позволяют перемещаться и обращаться к разным строкам в окне, относительно текущей строки, а также обращаться к значениям в начале или в конце окна.
+~~~~sql
+SELECT id,
+	home_type,
+	price,
+	LAG(price) OVER(PARTITION BY home_type ORDER BY price) AS 'lag',
+	LAG(price, 2) OVER(PARTITION BY home_type ORDER BY price) AS 'lag_2',
+	LEAD(price) OVER(PARTITION BY home_type ORDER BY price) AS 'lead',
+	FIRST_VALUE(price) OVER(PARTITION BY home_type ORDER BY price) AS 'first_value',
+	LAST_VALUE(price) OVER(PARTITION BY home_type ORDER BY price) AS 'last_value'
+FROM Rooms;
+~~~~
+___
+Из таблицы Rooms вывести id, home_type и price у всех жилых помещений, а также в отдельной колонке room_rank вывести ранг данного жилого помещения в его категории (home_type) по цене, используя для этого функцию DENSE_RANK так, чтобы самое дешёвое жилое помещение имело ранг 1, следующие за ним по цене — 2 и так далее.
+~~~~sql
+~~~~
+___
