@@ -521,3 +521,15 @@ SELECT STR_TO_DATE('November 13, 1998', '%M %d, %Y') AS date;
 
 SELECT CURDATE(), CURTIME(), NOW();
 ~~~~
+___
+|Тип|Формат по умолчанию|
+|---|---|
+|DATE|YYYY-MM-DD|
+|DATETIME|YYYY-MM-DD hh:mm:ss|
+|TIMESTAMP|YYYY-MM-DD hh:mm:ss|
+|TIME|hhh:mm:sss|
+|YEAR|YYYY - полный формат YY или Y - сокращённый формат, который возвращает год в пределах 2000-2069 для значений 0-69 и год в пределах 1970-1999 для значений 70-99|
+
+|Критерий|DATETIME|TIMESTAMP|
+|Диапазон|от 1000-01-01 00:00:00 
+до 9999-12-31 23:59:59||
